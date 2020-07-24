@@ -1,0 +1,75 @@
+/* Header */
+
+.bg-primary {
+    background-color: #2A343D !important;
+}
+
+/* Code */
+
+.hljs {
+    color: #000 !important;
+}
+
+/* Table */
+
+.table th,.table td{
+    padding: 0.5rem !important;
+    border-left: 1px solid #dee2e6 !important;
+    border-right: 1px solid #dee2e6 !important;
+    border-bottom: 1px solid #dee2e6 !important;
+}
+
+.table-striped tbody tr:nth-of-type(odd){
+    background-color: transparent !important;
+}
+
+.table thead th{
+    border-bottom: none !important;
+}
+
+.table tr:hover {
+    background: none !important;
+}
+
+.table td:hover,.table th:hover{
+    background: #f8f8f8 !important;
+}
+
+/* Menu */
+
+a.nav-link{
+    color: black !important;
+    font-weight: normal !important;
+}
+
+.bs-sidebar .nav > li > a{
+    padding: 0.5rem 2rem !important;
+    border-top: 1px solid transparent !important;
+}
+
+.bs-sidebar > .card{
+    background-color: #e9ecef !important;
+}
+
+.bs-sidebar .nav > li > a.active,.bs-sidebar .nav > li > a.active:hover,.bs-sidebar .nav > li > a.active:focus{
+    border-top: 1px solid #e9ecef !important;
+    border-right: none !important;
+}
+
+.bs-sidebar .nav > li > a:hover{
+    border-top: 1px solid #e9ecef !important;
+    background-color: #2A343D  !important;
+    border-right: none !important;
+    color: white !important;
+}
+
+a.nav-link.active{
+    color: white !important;
+    background-color: #2A343D  !important;
+}
+
+/* Search */
+
+.navbar-dark .navbar-nav .nav-link{
+    color: white !important;
+}

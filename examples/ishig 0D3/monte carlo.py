@@ -1,0 +1,15 @@
+import sys
+sys.path.append('../../')
+from ishig0d3 import sampler,response
+import numpy as np
+
+# %% Monte Carlo
+
+nbrPts = int(1e6)
+point = sampler(nbrPts)
+resp = response(point)
+mean = np.mean(resp,axis=0)
+var = np.var(resp,axis=0)
+
+np.save('mean.npy',mean)
+np.save('var.npy',var)
