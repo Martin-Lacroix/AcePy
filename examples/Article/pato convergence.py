@@ -1,5 +1,5 @@
 import sys
-sys.path.append('../../')
+sys.path.append('../../../')
 from matplotlib import pyplot as plt
 import chaoslib as cl
 import numpy as np
@@ -109,7 +109,7 @@ grid = [0.9,0.9,0.9]
 width = 0.5
 size = 8
 
-# nbrQuad = [165,495,1287,3003,6435]
+# quadList = [6435,3003,1287,495,165]
 # nbrMC = [165,495,1287,3003,6435,10000,20000]
 # mDotgQuad = [1.49297e-05,1.51732e-05,1.67381e-05,2.33179e-05,0.000791672]
 # virgQuad = [2.97631e-05,3.01217e-05,3.37883e-05,4.66131e-05,0.000989149]
@@ -134,7 +134,7 @@ plt.loglog(ptList,virgMc,'--C0',label='Monte Carlo')
 plt.loglog(ptList,virgMc,'.C0',markersize=size)
 plt.semilogy(quadList,virgQuad,'--C3',label='Quadrature')
 plt.semilogy(quadList,virgQuad,'.C3',markersize=size)
-plt.ylabel('virg SRE [-]')
+plt.ylabel('Virg $d$ SRE [-]')
 plt.xlabel('Points [-]')
 plt.legend()
 plt.grid(linewidth=width,color=grid)
