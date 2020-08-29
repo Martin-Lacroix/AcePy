@@ -9,10 +9,11 @@ import time
 
 # %% Test QR
 
+nbr = 2
 order = 9
-timeQR = []
-timeUpdate = []
 ptList = np.array([1e5,2e5,3e5,4e5,5e5]).astype(int)
+timeUpdate = np.zeros(ptList.shape[0])
+timeInv = np.zeros(ptList.shape[0])
 
 for i in range(ptList.shape[0]):
     
@@ -30,20 +31,19 @@ for i in range(ptList.shape[0]):
     V2 = np.delete(V,idx,axis=0)
     J2 = V2.T
     
-    # Update QR
+    for j in range(nbr):
     
-    start = time.time()
-    Jinv2 = cl.invdown(J,Jinv,idx)
-    timeUpdate.append(time.time()-start)
-    
-    # Recompute the QR
-    
-    start = time.time()
-    Jinv2 = linalg.pinv(J2)
-    timeQR.append(time.time()-start)
-    
-timeQR = np.array(timeQR)
-timeUpdate = np.array(timeUpdate)
+        # Update QR
+        
+        start = time.time()
+        Jinv2 = cl.invdown(J,Jinv,idx)
+        timeUpdate[i] += (time.time()-start)/nbr
+        
+        # Recompute the QR
+        
+        start = time.time()
+        Jinv2 = linalg.pinv(J2)
+        timeInv[i] += (time.time()-start)/nbr
     
 # %% Figures
 
@@ -59,15 +59,15 @@ size = 8
 
 plt.figure(1)
 plt.ticklabel_format(axis='X',style='sci',scilimits=(0,0))
-plt.plot(ptList,timeQR,'--C0',label='Recompute $J^{-1}$')
-plt.plot(ptList,timeQR,'.C0',markersize=size)
+plt.plot(ptList,timeInv,'--C0',label='Recompute $J^{-1}$')
+plt.plot(ptList,timeInv,'.C0',markersize=size)
 plt.ylabel('Time [s]')
 plt.xlabel('m [-]')
 plt.legend()
 plt.grid(linewidth=width,color=grid)
 plt.gca().spines['right'].set_color('none')
 plt.gca().spines['top'].set_color('none')
-plt.savefig("timeInvRedo.pdf",bbox_inches="tight",format="pdf",transparent=True)
+#plt.savefig("timeInvRedo.pdf",bbox_inches="tight",format="pdf",transparent=True)
 
 plt.figure(2)
 plt.ticklabel_format(axis='X',style='sci',scilimits=(0,0))
@@ -79,4 +79,16 @@ plt.legend()
 plt.grid(linewidth=width,color=grid)
 plt.gca().spines['right'].set_color('none')
 plt.gca().spines['top'].set_color('none')
-plt.savefig("timeInvUpdate.pdf",bbox_inches="tight",format="pdf",transparent=True)
+#plt.savefig("timeInvUpdate.pdf",bbox_inches="tight",format="pdf",transparent=True)
+
+plt.figure(3)
+plt.ticklabel_format(axis='X',style='sci',scilimits=(0,0))
+plt.plot(ptList,timeInv/timeUpdate,'--C0')
+plt.plot(ptList,timeInv/timeUpdate,'.C0',markersize=size)
+plt.ylabel('Speedup [-]')
+plt.xlabel('m [-]')
+plt.ylim([0,20])
+plt.grid(linewidth=width,color=grid)
+plt.gca().spines['right'].set_color('none')
+plt.gca().spines['top'].set_color('none')
+plt.savefig("speedupInv.pdf",bbox_inches="tight",format="pdf",transparent=True)
