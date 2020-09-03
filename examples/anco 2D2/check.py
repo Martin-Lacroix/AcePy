@@ -1,8 +1,8 @@
-import sys
-sys.path.append('../../')
-from anco2d2 import sampler,response
-import numpy as np
 import pickle
+import numpy as np
+import chaoslib as cl
+from fun import sampler
+from fun import response
 
 # %% Initialisation
 

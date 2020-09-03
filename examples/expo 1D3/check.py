@@ -1,9 +1,8 @@
-import sys
-sys.path.append('../../')
-from matplotlib import pyplot as plt
-from expo1d3 import sampler,response
-import numpy as np
 import pickle
+import numpy as np
+import chaoslib as cl
+from fun import sampler,response
+from matplotlib import pyplot as plt
 
 # %% Initialisation
 
