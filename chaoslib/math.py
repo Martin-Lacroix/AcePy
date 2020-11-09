@@ -114,8 +114,6 @@ def random(nbrPts,dom,pdf):
     """Generates a sample of points according to a probability distribution"""
 
     dom = np.atleast_2d(dom)
-    dim = dom.shape[0]
-
     y = np.random.uniform(0,1,nbrPts)
     x = np.array([np.random.uniform(a,b,nbrPts) for [a,b] in dom])
     
