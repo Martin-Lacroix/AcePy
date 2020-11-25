@@ -108,36 +108,6 @@ def rseq(nbrPts,dim=1):
     point = np.squeeze(point)
     return point
 
-# %% Monte Carlo Sampler
-
-def random(nbrPts,dom,pdf):
-    """Generates a sample of points according to a probability distribution"""
-
-    dom = np.atleast_2d(dom)
-    y = np.random.uniform(0,1,nbrPts)
-    x = np.array([np.random.uniform(a,b,nbrPts) for [a,b] in dom])
-    
-    proba = pdf(np.squeeze(x).T)
-    index = np.argwhere(y<proba).flatten()
-    point = np.transpose(x[:,index])
-
-    # Repeats the operation to obtain the desired size
-
-    while (point.shape[0]<nbrPts):
-
-        y = np.random.uniform(0,1,nbrPts)
-        x = np.array([np.random.uniform(a,b,nbrPts) for [a,b] in dom])
-        
-        proba = pdf(np.squeeze(x).T)
-        index = np.argwhere(y<proba).flatten()
-        point = np.concatenate((point,x[:,index].T),axis=0)
-
-    # Removes the overflow of points
-
-    index = np.random.choice(point.shape[0],nbrPts)
-    point = point[index]
-    return point
-
 # %% Pseudo-Inverse Downgrade
 
 def invdown(A,Ainv,index):
