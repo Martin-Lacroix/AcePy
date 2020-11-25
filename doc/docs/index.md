@@ -288,20 +288,6 @@ The class will act as a mapping function between the whitened and the original r
 
 <br />
 
-Multi-dimensional random samples can be generated from any arbitrary joint probability distributions. The parameter `pdf` needs to have the same behaviour as the `pdf` method of a distribution class.
-
-```python
-    sample = random(nbrPts,dom,pdf)           # Generates a sample according to the pdf
-```
-
-| Input             | Type              | Description                                               |
-|-------------------|-------------------|-----------------------------------------------------------|
-| *nbrPts*          | *int*             | *sample from the same distributio as the reference*       |
-| *dom*             | *(d,2) array*     | *white noise sample of points*                            |
-| *pdf*             | *callable*        | *probability density function*                            |
-
-<br />
-
 The Sobol sensitivity indices of a model can be directly obtained from the polynomial chaos coefficients by
 
 ```python
