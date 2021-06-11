@@ -1,6 +1,6 @@
 # Chaoslib
 
-Code developped for obtaining the **Master's degree in Engineering physics**. The code is a polynomial chaos library for high dimensionnal stochastic problems with correlated input variables. The examples and doc folders contain some test-cases as well as a compilable documentation. [Thesis report here](https://matheo.uliege.be/handle/2268.2/9024)
+Code developped for obtaining the **Master's degree in Engineering physics**. The code is a polynomial chaos library for high dimensionnal stochastic problems with correlated input variables. The examples and doc folders contain some test-cases as well as a compilable documentation. [Thesis report here](https://matheo.uliege.be/handle/2268.2/9024).
 
 ## Use
 
