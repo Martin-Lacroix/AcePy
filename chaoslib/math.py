@@ -1,7 +1,6 @@
-from sobol_seq import i4_sobol_generate
 import numpy as np
 
-# %% Multi-index
+# %% Multi-Index
 
 def indextens(order,dim,trunc):
     """Computes the multi-index matrix of polynomial tensor product"""
@@ -55,6 +54,7 @@ def prime(nbrPrime):
 def sobol(nbrPts,dim=1):
     """Computes the Sobol sequence of quasi-random numbers"""
 
+    from sobol_seq import i4_sobol_generate
     point = i4_sobol_generate(dim,nbrPts)
     point = np.squeeze(point)
     return point

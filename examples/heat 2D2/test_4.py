@@ -38,6 +38,7 @@ for i in range(mean.shape[0]):
 
 plt.legend(['Chaoslib','Monte Carlo'])
 plt.ylabel('Mean')
+plt.show()
 
 plt.figure(2)
 for i in range(var.shape[0]):
@@ -46,3 +47,4 @@ for i in range(var.shape[0]):
 
 plt.legend(['Chaoslib','Monte Carlo'])
 plt.ylabel('Variance')
+plt.show()

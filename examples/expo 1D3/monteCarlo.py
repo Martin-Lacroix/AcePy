@@ -21,9 +21,9 @@ plt.rcParams['legend.fontsize'] = 18
 plt.figure(1)
 plt.plot(mean,label='Monte Carlo')
 plt.ylabel('Mean')
-plt.legend()
+plt.show()
 
 plt.figure(2)
 plt.plot(var,label='Monte Carlo')
 plt.ylabel('Variance')
-plt.legend()
+plt.show()
