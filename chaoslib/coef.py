@@ -9,6 +9,7 @@ def spectral(resp,poly,point,weight=0):
     printer(0,'Computing coefficients ...')
 
     V = poly.eval(point)
+    resp = np.array(resp)
     if not np.any(weight): weight = 1/V.shape[0]
 
     # Computes the polynomial chaos coefficients
