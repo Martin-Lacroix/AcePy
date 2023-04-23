@@ -81,6 +81,8 @@ And allow the computation to the joint probability distribution function and the
 
 # <img src="Python.svg" width="60"/> Polynomial Basis
 
+<br />
+
 A polynomial basis can be constructed by with an exponent table and a coefficient matrix. The parameter `d` is the dimension, `m` the number of monomials and `p` is the number of polynomials.
 
 ```python
@@ -142,6 +144,8 @@ Similarly, orthogonal polynomials can be constructed using a three terms recurre
 
 # <img src="Python.svg" width="60"/> Quadrature Rules
 
+<br />
+
 A quasi-Monte Carlo quadrature rule can be generated with a low-discrepancy sequence. The parameter `pdf` must have the same behaviour as the `pdf` method of a distribution class.
 
 ```python
@@ -189,6 +193,8 @@ Different sparse quadrature rules for a polynomial basis can be generated from a
 
 # <img src="Python.svg" width="60"/> Expansion Coefficients
 
+<br />
+
 The polynomial chaos coefficients can be computed by spectral projection of least squares regression. The parameter `n` is the number of points and `d` the dimension. The parameter `weight` must be provided if the points are quadrature nodes, otherwise a Monte Carlo integration is assumed.
 
 ```python
@@ -224,6 +230,8 @@ The least angle regression algorithm selects the relevant polynomials in additio
 
 # <img src="Python.svg" width="60"/> Surrogate Model
 
+<br />
+
 The polynomial chaos model can be constructed by invoking the constructor of the expansion class. The parameter `p` is the number of polynomials in the basis. The class provides different built-in methods:
 
 ```python
@@ -257,6 +265,8 @@ In addition, a simple polynomial mapping between two one-dimensional random vari
 <br />
 
 # <img src="Python.svg" width="60"/> Other Functions
+
+<br />
 
 A class of principal components analysis whitening can be created for a linearly correlated sample. The parameter `n` is the number of points and `d` is the dimension.
 
