@@ -1,5 +1,7 @@
 # <img src="Python.svg" width="60"/> Distributions
 
+<br />
+
 Chaoslib provides basic classes of well-know one-dimensional probability distributions for which the three terms recurrence coefficients can be computed analytically:
 
 ```python
