@@ -1,8 +1,8 @@
-# Chaoslib
+## Introduction
 
 Code developped for obtaining the **Master's degree in Engineering Physics**. The code is a polynomial chaos library for high dimensionnal stochastic problems with correlated input variables. The examples and doc folders contain some test-cases as well as a compilable documentation. [Thesis report here](https://hdl.handle.net/2268/293566).
 
-## Use
+## Installation
 
 First, make sure to work with Python 3 and the lastest version of Numpy and Scipy. This library also requires the package sobol_seq to generate the Sobol low-discrepancy sequence. Then, place the chaoslib folder in the site-packages folder of Python to use the library.
 ```css
