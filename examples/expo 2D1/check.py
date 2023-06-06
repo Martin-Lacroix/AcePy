@@ -1,6 +1,5 @@
 import pickle
 import numpy as np
-import chaoslib as cl
 from fun import sampler,response
 from matplotlib import pyplot as plt
 
@@ -26,9 +25,6 @@ error = abs(np.divide(resp-respMod,resp))
 error = 100*np.mean(error,axis=0)
 
 # %% Figures
-
-plt.rcParams['font.size'] = 18
-plt.rcParams['legend.fontsize'] = 18
 
 plt.figure(1)
 for i in range(mean.shape[0]):

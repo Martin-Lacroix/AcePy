@@ -1,5 +1,4 @@
 import numpy as np
-import chaoslib as cl
 from fun import sampler,response
 from matplotlib import pyplot as plt
 
@@ -15,9 +14,6 @@ np.save('mean.npy',mean)
 np.save('var.npy',var)
 
 # %% Figures
-
-plt.rcParams['font.size'] = 18
-plt.rcParams['legend.fontsize'] = 18
 
 plt.figure(1)
 plt.plot(mean,label='Monte Carlo')

@@ -1,6 +1,3 @@
-from sys import path
-path.append('/mnt/Data/Devs/PCE-Chaoslib')
-
 import numpy as np
 import chaoslib as cl
 from fun import response

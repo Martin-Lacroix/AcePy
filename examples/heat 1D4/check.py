@@ -27,9 +27,6 @@ error = 100*np.mean(error,axis=0)
 
 # %% Figures
 
-plt.rcParams['font.size'] = 18
-plt.rcParams['legend.fontsize'] = 18
-
 plt.figure(1)
 plt.plot(meanMod,label='Chaoslib')
 plt.plot(mean,'--',label='Monte Carlo')
