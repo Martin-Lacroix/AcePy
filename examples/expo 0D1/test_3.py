@@ -1,20 +1,25 @@
 import numpy as np
 import chaoslib as cl
+from fun import sampler
 from fun import response
 
 # %% Initialisation
 
-order = 15
-nbrPts = 100
-dist = cl.Normal(1,0.5)
+order = 7
+nbrPts = 1000
+pdf = cl.Normal(1,0.5).pdf
+dom = [-1,3]
 
 # %% Polynomial Chaos
 
-point = dist.halton(nbrPts)
+point = sampler(nbrPts)
+poly = cl.gschmidt(order,point)
 resp = response(point)
 
-poly = cl.gschmidt(order,point)
-coef = cl.colloc(resp,poly,point)
+coef,index = cl.lars(resp,poly,point,it=10)
+coef = coef[index]
+poly.clean(index)
+
 model = cl.Expansion(coef,poly)
 
 cl.save(model,'model')

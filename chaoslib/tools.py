@@ -2,7 +2,7 @@ from pickle import dump
 import numpy as np
 import sys
 
-# %% Save Print and Progress Functions
+# %% Save and Progress Functions
 
 def save(item,name):
 
@@ -15,11 +15,23 @@ def timer(step,end,message):
     sys.stdout.write('\r'+message+str(round(100*(step+1)/end))+' %\t')
     sys.stdout.flush()
 
-def printer(end,message):
+# %% Start and End Function Decorator
 
-    sys.stdout.write('\r'+message+'\t')
-    sys.stdout.flush()
-    if end: sys.stdout.write('\n')
+def start_end(func):
+    def wrapper(*args,**kwargs):
+        
+        text = '\rComputing '+func.__name__
+        sys.stdout.write(text+' ...\t')
+        sys.stdout.flush()
+
+        result = func(*args,**kwargs)
+
+        sys.stdout.write(text+' 100%\t')
+        sys.stdout.flush()
+        sys.stdout.write('\n')
+        
+        return result
+    return wrapper
 
 # %% Pseudo-Inverse Downgrade for Column Removal
 
@@ -71,3 +83,4 @@ class Pca:
         point = np.dot(self.invA,point.T)
         point = self.std*point.T+self.mean
         return point
+    

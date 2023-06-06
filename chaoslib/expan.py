@@ -1,6 +1,6 @@
+from .tools import timer,start_end
 from .poly import polyrecur
 from scipy import integrate
-from .tools import printer
 from copy import deepcopy
 import numpy as np
 
@@ -33,6 +33,7 @@ class Expansion:
 
 # %% Map of Random Variable to Another Distribution
 
+@start_end
 def transfo(invcdf,order,dist):
 
     nbrPoly = order+1
@@ -42,7 +43,8 @@ def transfo(invcdf,order,dist):
     # Computes polynomial chaos coefficients and model
 
     for i in range(nbrPoly):
-
+        
+        timer(i,nbrPoly,'Computing transfo ')
         fun = lambda x: invcdf(x)*poly.eval(dist.invcdf(x))[:,i]
         coef[i] = integrate.quad(fun,0,1)[0]
 
@@ -52,6 +54,7 @@ def transfo(invcdf,order,dist):
 
 # %% First and Total Order Sobol Sensitivity Indices
 
+@start_end
 def anova(coef,poly):
 
     S,ST = [[],[]]
@@ -82,10 +85,10 @@ def anova(coef,poly):
     return sobol
 
 # %% Sensitivity Indices by Analysis of Covariance
-    
+
+@start_end
 def ancova(model,point,weight=0):
 
-    printer(0,'Computing ancova ...')
     nbrPts = np.array(point)[...].shape[0]
     if not np.any(weight): weight = np.ones(nbrPts)/nbrPts
 
@@ -122,7 +125,6 @@ def ancova(model,point,weight=0):
     
     index,SS,ST = combine(index,SS,ST)
     ancova = dict(zip(['SS','SC','ST'],[SS,ST-SS,ST]))
-    printer(1,'Computing ancova 100 %')
     return index,ancova
 
 # %% Combine Different Powers of the Same Monomial

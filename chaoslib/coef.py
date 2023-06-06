@@ -1,11 +1,10 @@
-from .tools import timer,printer
+from .tools import timer,start_end
 import numpy as np
 
 # %% Expansion Coefficients with Spectral Projection
 
+@start_end
 def spectral(resp,poly,point,weight=0):
-
-    printer(0,'Computing coefficients ...')
 
     V = poly.eval(point)
     resp = np.array(resp)
@@ -15,15 +14,12 @@ def spectral(resp,poly,point,weight=0):
 
     V = np.transpose(weight*V.T)
     coef = np.transpose(np.dot(resp.T,V))
-
-    printer(1,'Computing coefficients 100 %')
     return coef
 
 # %% Expansion Coefficients with Least-Square Regression
 
+@start_end
 def colloc(resp,poly,point,weight=0):
-
-    printer(0,'Computing coefficients ...')
 
     resp = np.array(resp)
     shape = (poly[:].shape[0],)+resp.shape[1:]
@@ -34,15 +30,12 @@ def colloc(resp,poly,point,weight=0):
     
     coef = square(V,resp,weight)
     coef = coef.reshape(shape)
-    
-    printer(1,'Computing coefficients 100 %')
     return coef
 
 # %% Expansion Coefficients with Least Angle Regression
 
+@start_end
 def lars(resp,poly,point,weight=0,it=np.inf):
-    
-    printer(0,'Computing coefficients ...')
 
     resp = np.array(resp)
     shape = (poly[:].shape[0],)+resp.shape[1:]
@@ -62,19 +55,16 @@ def lars(resp,poly,point,weight=0,it=np.inf):
         coef[:,i] = angle(V1,resp[:,i],stat,it)
         index = np.argwhere(coef[:,i]!=0).flatten()
         coef[index,i] = square(V[:,index],resp[:,i],weight)
-        timer(i,end,'Computing coefficients ')
+        timer(i,end,'Computing lars ')
 
     index = np.argwhere(np.any(coef,axis=1)).flatten()
     coef = coef.reshape(shape)
-    
-    printer(1,'Computing coefficients 100 %')
     return coef,index
 
 # %% Expansion Coefficients with Least Absolute Shrinkage
 
+@start_end
 def lasso(resp,poly,point,weight=0,it=np.inf):
-    
-    printer(0,'Computing coefficients ...')
 
     resp = np.array(resp)
     shape = (poly[:].shape[0],)+resp.shape[1:]
@@ -94,12 +84,10 @@ def lasso(resp,poly,point,weight=0,it=np.inf):
         coef[:,i] = shrink(V1,resp[:,i],stat,it)
         index = np.argwhere(coef[:,i]!=0).flatten()
         coef[index,i] = square(V[:,index],resp[:,i],weight)
-        timer(i,end,'Computing coefficients ')
+        timer(i,end,'Computing lasso ')
 
     index = np.argwhere(np.any(coef,axis=1)).flatten()
     coef = coef.reshape(shape)
-    
-    printer(1,'Computing coefficients 100 %')
     return coef,index
 
 # %% Expansion Coefficients with Least Squares Regression

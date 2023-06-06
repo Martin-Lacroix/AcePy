@@ -14,10 +14,7 @@ point,weight = cl.tensquad(ordQuad,dist)
 poly = cl.polyrecur(ordPoly,dist)
 
 resp = response(point)
-coef,index = cl.lars(resp,poly,point,it=20)
-poly.clean(index)
-coef = coef[index]
-
+coef = cl.spectral(resp,poly,point,weight)
 model = cl.Expansion(coef,poly)
 
 cl.save(model,'model')

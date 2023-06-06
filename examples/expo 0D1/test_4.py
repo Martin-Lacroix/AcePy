@@ -1,25 +1,20 @@
 import numpy as np
 import chaoslib as cl
-from fun import sampler
 from fun import response
 
 # %% Initialisation
 
-order = 7
-nbrPts = 1000
-pdf = cl.Normal(1,0.5).pdf
-dom = [-1,3]
+ordPoly = 7
+ordQuad = 2*ordPoly
+dist = cl.Normal(1,0.5)
 
 # %% Polynomial Chaos
 
-point = sampler(nbrPts)
-poly = cl.gschmidt(order,point)
+point,weight = cl.tensquad(ordQuad,dist)
 resp = response(point)
 
-coef,index = cl.lars(resp,poly,point,it=10)
-coef = coef[index]
-poly.clean(index)
-
+poly = cl.polyrecur(ordPoly,dist)
+coef = cl.spectral(resp,poly,point,weight)
 model = cl.Expansion(coef,poly)
 
 cl.save(model,'model')

@@ -1,21 +1,18 @@
 import numpy as np
 import chaoslib as cl
-from fun import sampler,response
+from fun import response
 from matplotlib import pyplot as plt
 
 # %% Initialisation
 
-order = 20
-nbrPts = int(1e4)
+ordPoly = 20
+ordQuad = 10*ordPoly
+dist = cl.Normal(1,0.5)
 
 # %% Polynomial Chaos
 
-point = sampler(nbrPts)
-poly = cl.gschmidt(order,point)
-index,weight = cl.newquad(point,poly)
-
-poly.trunc(10)
-point = point[index]
+point,weight = cl.tensquad(ordQuad,dist)
+poly = cl.polyrecur(ordPoly,dist)
 
 resp = response(point)
 coef = cl.spectral(resp,poly,point,weight)

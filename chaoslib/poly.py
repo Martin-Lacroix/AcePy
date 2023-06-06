@@ -1,5 +1,5 @@
 from scipy import sparse,linalg
-from .tools import printer
+from .tools import start_end
 from .proba import Joint
 import numpy as np
 
@@ -57,9 +57,8 @@ class Polynomial:
 
 # %% Orthonormal Polynomial Basis with Gram-Schmidt
 
+@start_end
 def gschmidt(order,point,weight=0,trunc=1):
-
-    printer(0,'Computing polynomials ...')
 
     point = np.atleast_2d(np.transpose(point)).T
     if not np.any(weight): weight = 1/point.shape[0]
@@ -84,14 +83,13 @@ def gschmidt(order,point,weight=0,trunc=1):
     coef[0,0] = 1
 
     poly = Polynomial(expo,coef,1)
-    printer(1,'Computing polynomials 100 %')
     return poly
 
 # %% Orthogonal Polynomials with Recurrence Coefficients
 
+@start_end
 def polyrecur(order,dist,trunc=1):
 
-    printer(0,'Computing polynomials ...')
     if not isinstance(dist,Joint): dist = Joint(dist)
 
     nbrPoly = order+1
@@ -120,8 +118,6 @@ def polyrecur(order,dist,trunc=1):
 
     for i in range(dim): polyList[i][:] /= np.sqrt(norm[i,:,None])
     poly = tensdot(polyList,order,trunc)
-
-    printer(1,'Computing polynomials 100 %')
     return poly
 
 # %% Tensor product of Univariate Polynomial Basis

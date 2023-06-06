@@ -5,17 +5,17 @@ from matplotlib import pyplot as plt
 
 # %% Initialisation
 
-order = 20
-nbrPts = 200
+ordPoly = 20
+ordQuad = 10*ordPoly
 dist = cl.Normal(1,0.5)
 
 # %% Polynomial Chaos
 
-point = dist.sobol(nbrPts)
-poly = cl.gschmidt(order,point)
-resp = response(point)
+point,weight = cl.tensquad(ordQuad,dist)
+poly = cl.polyrecur(ordPoly,dist)
 
-coef = cl.colloc(resp,poly,point)
+resp = response(point)
+coef = cl.colloc(resp,poly,point,weight)
 model = cl.Expansion(coef,poly)
 
 cl.save(model,'model')

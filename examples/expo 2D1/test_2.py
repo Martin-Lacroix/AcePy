@@ -1,21 +1,27 @@
+from sys import path
+path.append('/mnt/Data/Devs/PCE-Chaoslib/')
+
 import numpy as np
 import chaoslib as cl
-from fun import response
+from fun import sampler,response
 from matplotlib import pyplot as plt
 
 # %% Initialisation
 
 order = 20
-nbrPts = 300
-dist = cl.Normal(1,0.5)
+nbrPts = int(1e4)
 
 # %% Polynomial Chaos
 
-point = dist.sobol(nbrPts)
+point = sampler(nbrPts)
 poly = cl.gschmidt(order,point)
-resp = response(point)
+index,weight = cl.newquad(point,poly)
 
-coef = cl.colloc(resp,poly,point)
+poly.trunc(10)
+point = point[index]
+
+resp = response(point)
+coef = cl.spectral(resp,poly,point,weight)
 model = cl.Expansion(coef,poly)
 
 cl.save(model,'model')

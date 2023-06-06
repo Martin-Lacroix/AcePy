@@ -1,23 +1,9 @@
-from scipy import special,stats
+from scipy import special
 import numpy as np
-
-# %% Base Proba Class
-
-class Proba:
-
-    def sobol(self,nbrPts):
-        
-        point = stats.qmc.Sobol(1).random(nbrPts)
-        return self.invcdf(point.flatten())
-
-    def halton(self,nbrPts):
-
-        point = stats.qmc.Halton(1).random(nbrPts)
-        return self.invcdf(point.flatten())
 
 # %% Uniform Law with Lower and Upper Boundaries
 
-class Uniform(Proba):
+class Uniform:
 
     def __init__(self,A,B):
 
@@ -51,7 +37,7 @@ class Uniform(Proba):
 
 # %% Normal Law with Mean and Standard Deviation
 
-class Normal(Proba):
+class Normal:
 
     def __init__(self,A,B):
 
@@ -91,7 +77,7 @@ class Normal(Proba):
 
 # %% Exponential Law with Inverse Scale
 
-class Expo(Proba):
+class Expo:
 
     def __init__(self,A):
 
@@ -124,7 +110,7 @@ class Expo(Proba):
 
 # %% Gamma Law with Shape and Scale
 
-class Gamma(Proba):
+class Gamma:
 
     def __init__(self,A,B):
 
@@ -160,7 +146,7 @@ class Gamma(Proba):
 
 # %% Lognormal Law with Mean and Variance
 
-class Lognorm(Proba):
+class Lognorm:
 
     def __init__(self,A,B):
 
@@ -201,7 +187,7 @@ class Lognorm(Proba):
 
 # %% Beta Law with Shape Parameters
 
-class Beta(Proba):
+class Beta:
 
     def __init__(self,A,B):
 
@@ -230,7 +216,7 @@ class Beta(Proba):
         AB = 2*N+self.A+self.B
         coef = np.zeros((2,nbrCoef))
 
-        # Define some temporary variables for computing the TTR
+        # Define some temporary variables for the recurrence
 
         B1 = self.A*self.B/((self.A+self.B+1)*np.power(self.A+self.B,2))
         B2 = (AB-1)*(AB-3)*np.power(AB-2,2)+2*((N==0)+(N==1))
@@ -264,17 +250,4 @@ class Joint:
         dim = self.dist.shape[0]
         point = [self.dist[i].random(nbrPts) for i in range(dim)]
         return np.transpose(point)
-
-    def sobol(self,nbrPts):
-
-        dim = self.dist.shape[0]
-        point = stats.qmc.Sobol(dim).random(nbrPts)
-        point = [self.dist[i].invcdf(point[:,i]) for i in range(dim)]
-        return np.transpose(point)
-
-    def halton(self,nbrPts):
-
-        dim = self.dist.shape[0]
-        point = stats.qmc.Halton(dim).random(nbrPts)
-        point = [self.dist[i].invcdf(point[:,i]) for i in range(dim)]
-        return np.transpose(point)
+    

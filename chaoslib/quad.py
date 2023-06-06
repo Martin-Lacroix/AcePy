@@ -1,37 +1,11 @@
-from scipy import optimize,stats,linalg
-from .tools import printer,timer
+from scipy import optimize,linalg
+from .tools import timer,start_end
 from .proba import Joint
 import numpy as np
 
-# %% Quadrature for Uniform Quasi-Monte Carlo Inregration
-
-def qmcquad(nbrPts,dom,pdf=0,seq='halton'):
-
-    dom = np.atleast_2d(dom)
-    dim = dom.shape[0]
-    
-    if (seq=='halton'): point = stats.qmc.Halton(dim).random(nbrPts)
-    if (seq=='sobol'): point = stats.qmc.Sobol(dim).random(nbrPts)
-    point = np.reshape(point,(-1,dim))
-
-    # Expands the sequence into the provided domain
-
-    for i in range(dim):
-
-        d = dom[i][1]-dom[i][0]
-        point[:,i] = d/2+dom[i][0]+d*(point[:,i]-0.5)
-
-    # Computes the weights with the density
-
-    vol = np.prod([dom[i][1]-dom[i][0] for i in range(dim)])
-    weight = vol*np.ones(nbrPts)/nbrPts
-    point = np.squeeze(point)
-
-    if callable(pdf): weight = np.multiply(weight,pdf(point))
-    return point,weight
-
 # %% Tensor Product Quadrature with Recurrence Coefficients
 
+@start_end
 def tensquad(order,dist):
 
     if not isinstance(dist,Joint): dist = Joint(dist)
@@ -72,9 +46,9 @@ def tensquad(order,dist):
 
 # %% Approximate Fekete Points and Weights
 
+@start_end
 def fekquad(point,poly):
 
-    printer(0,'Computing quadrature ...')
     nbrPoly = poly[:].shape[0]
 
     # Reconditioning of the Vandermonde matrix
@@ -92,14 +66,12 @@ def fekquad(point,poly):
     weight = linalg.solve_triangular(R,q)
     index = P[:nbrPoly]
 
-    printer(1,'Computing quadrature 100 %')
     return index,weight
 
 # %% Positive Quadrature by Node Removal with QR downgrade
 
+@start_end
 def nulquad(point,poly,weight=0):
-    
-    printer(0,'Computing quadrature ...')
 
     V = poly.eval(point)
     nbrPts = V.shape[0]
@@ -112,7 +84,7 @@ def nulquad(point,poly,weight=0):
 
     for i in range(end):
 
-        timer(i,end,'Computing quadrature ')
+        timer(i,end,'Computing nulquad ')
         if i==0: Q,R = linalg.qr(V,mode='full')
         else: Q,R = linalg.qr_delete(Q,R,idx,overwrite_qr=1,check_finite=0)
         z = Q[:,-1]
@@ -129,11 +101,11 @@ def nulquad(point,poly,weight=0):
         index = np.delete(index,idx)
         weight = np.delete(weight,idx)
     
-    printer(1,'Computing quadrature 100 %')
     return index,weight
 
 # %% Positive Quadrature by Node Removal with Newton-Raphson
 
+@start_end
 def newquad(point,poly,weight=0):
     
     def null(Vt,Jinv,z):
@@ -148,8 +120,6 @@ def newquad(point,poly,weight=0):
         else: return z
         
     # First null space and initialization
-    
-    printer(0,'Computing quadrature ...')
 
     V = poly.eval(point)
     nbrPts = V.shape[0]
@@ -163,7 +133,7 @@ def newquad(point,poly,weight=0):
 
     for i in range(end):
         
-        timer(i,end,'Computing quadrature ')
+        timer(i,end,'Computing newquad ')
 
         z = null(V.T,V,z)
         if not np.any(z): break
@@ -181,15 +151,13 @@ def newquad(point,poly,weight=0):
         index = np.delete(index,idx)
         weight = np.delete(weight,idx)
         V,R = linalg.qr_delete(V,R,idx,overwrite_qr=1,check_finite=0)
-    
-    printer(1,'Computing quadrature 100 %')
+
     return index,weight
 
 # %% Positive Quadrature with Revised Simplex
 
+@start_end
 def simquad(point,poly):
-
-    printer(0,'Computing quadrature ...')
     
     # Initialization and Vandermonde matrix
     
@@ -204,6 +172,5 @@ def simquad(point,poly):
     index = np.argwhere(x['x']>tol).flatten()
     weight = x['x'][index]
 
-    printer(1,'Computing quadrature 100 %')
     if x['success']: return index,weight
     else: raise Exception('Simplex failure')

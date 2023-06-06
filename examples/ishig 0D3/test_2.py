@@ -1,21 +1,23 @@
 import numpy as np
 import chaoslib as cl
-from fun import response
+from fun import sampler,response
 
 # %% Initialisation
 
-order = 8
-nbrPts = 1000
-dom = ([-np.pi,np.pi],[-np.pi,np.pi],[-np.pi,np.pi])
-dist = cl.Joint([cl.Uniform(-np.pi,np.pi) for i in range(3)])
+order = 12
+nbrPts = int(1e4)
 
 # %% Polynomial Chaos
 
-point,weight = cl.qmcquad(nbrPts,dom,dist.pdf)
-poly = cl.gschmidt(order,point,weight)
+point = sampler(nbrPts)
+poly = cl.gschmidt(order,point)
+index,weight = cl.simquad(point,poly)
+
+poly.trunc(6)
+point = point[index]
 resp = response(point)
 
-coef = cl.colloc(resp,poly,point,weight)
+coef = cl.spectral(resp,poly,point,weight)
 model = cl.Expansion(coef,poly)
 
 cl.save(model,'model')
