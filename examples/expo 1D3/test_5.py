@@ -1,3 +1,6 @@
+from sys import path
+path.append('/mnt/Data/Devs/PCE-Chaoslib')
+
 import numpy as np
 import chaoslib as cl
 from fun import response
@@ -29,8 +32,6 @@ mean,var = [model.mean,model.var]
 
 varMc = np.load('var.npy')
 meanMc = np.load('mean.npy')
-plt.rcParams['font.size'] = 18
-plt.rcParams['legend.fontsize'] = 18
 
 plt.figure(1)
 plt.plot(mean,label='Chaoslib')

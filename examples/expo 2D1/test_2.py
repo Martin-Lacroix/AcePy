@@ -11,7 +11,7 @@ dist = cl.Normal(1,0.5)
 
 # %% Polynomial Chaos
 
-point = dist.rseq(nbrPts)
+point = dist.sobol(nbrPts)
 poly = cl.gschmidt(order,point)
 resp = response(point)
 

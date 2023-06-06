@@ -4,10 +4,9 @@ from .tools import printer
 from copy import deepcopy
 import numpy as np
 
-# %% Polynomial Chaos
+# %% Polynomial Chaos Expansion
 
 class Expansion:
-    """Class of polynomial chaos expansion"""
 
     def __init__(self,coef,poly):
 
@@ -32,10 +31,9 @@ class Expansion:
         V = np.squeeze(np.dot(self.coef,V.T).T)
         return V
 
-# %% Univariate Expansion
+# %% Map of Random Variable to Another Distribution
 
 def transfo(invcdf,order,dist):
-    """Maps an arbitrary random variable to another distribution"""
 
     nbrPoly = order+1
     coef = np.zeros(nbrPoly)
@@ -52,10 +50,9 @@ def transfo(invcdf,order,dist):
     transfo = lambda x: expan.eval(x)
     return transfo
 
-# %% Analysis of Variance
+# %% First and Total Order Sobol Sensitivity Indices
 
 def anova(coef,poly):
-    """Computes the first and total order Sobol sensitivity indices"""
 
     S,ST = [[],[]]
     expo = poly.expo
@@ -84,10 +81,9 @@ def anova(coef,poly):
     sobol = dict(zip(['S','ST'],[S,ST]))
     return sobol
 
-# %% Analysis of Covariance
+# %% Sensitivity Indices by Analysis of Covariance
     
 def ancova(model,point,weight=0):
-    """Computes the sensitivity indices by analysis of covariance"""
 
     printer(0,'Computing ancova ...')
     nbrPts = np.array(point)[...].shape[0]
@@ -129,10 +125,9 @@ def ancova(model,point,weight=0):
     printer(1,'Computing ancova 100 %')
     return index,ancova
 
-# %% Combine Power
+# %% Combine Different Powers of the Same Monomial
 
 def combine(index,SS,ST):
-    """Combines the indices from different powers of the same monomial"""
     
     index = np.transpose(index)
     index = (index/np.max(index,axis=0)).T

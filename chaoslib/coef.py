@@ -1,10 +1,9 @@
 from .tools import timer,printer
 import numpy as np
 
-# %% Spectral Projection
+# %% Expansion Coefficients with Spectral Projection
 
 def spectral(resp,poly,point,weight=0):
-    """Computes the expansion coefficients with a spectral projection"""
 
     printer(0,'Computing coefficients ...')
 
@@ -20,10 +19,9 @@ def spectral(resp,poly,point,weight=0):
     printer(1,'Computing coefficients 100 %')
     return coef
 
-# %% Point Collocation
+# %% Expansion Coefficients with Least-Square Regression
 
 def colloc(resp,poly,point,weight=0):
-    """Computes the expansion coefficients with a least-square regression"""
 
     printer(0,'Computing coefficients ...')
 
@@ -40,10 +38,9 @@ def colloc(resp,poly,point,weight=0):
     printer(1,'Computing coefficients 100 %')
     return coef
 
-# %% Least Angle Regression
+# %% Expansion Coefficients with Least Angle Regression
 
 def lars(resp,poly,point,weight=0,it=np.inf):
-    """Computes the expansion coefficients with a least angle regression"""
     
     printer(0,'Computing coefficients ...')
 
@@ -73,10 +70,9 @@ def lars(resp,poly,point,weight=0,it=np.inf):
     printer(1,'Computing coefficients 100 %')
     return coef,index
 
-# %% Least Absolute Shrinkage Operator
+# %% Expansion Coefficients with Least Absolute Shrinkage
 
 def lasso(resp,poly,point,weight=0,it=np.inf):
-    """Computes the expansion coefficients with a least absolute shrinkage"""
     
     printer(0,'Computing coefficients ...')
 
@@ -106,10 +102,9 @@ def lasso(resp,poly,point,weight=0,it=np.inf):
     printer(1,'Computing coefficients 100 %')
     return coef,index
 
-# %% Least Squares Regression
+# %% Expansion Coefficients with Least Squares Regression
 
 def square(V,resp,weight):
-    """Computes the expansion coefficients with a least squares regression"""
     
     if np.any(weight):
 
@@ -121,10 +116,9 @@ def square(V,resp,weight):
     else: coef = np.linalg.lstsq(V,resp,rcond=None)[0]
     return coef
 
-# %% Least Angle Regression
+# %% Expansion Coefficients with Least Angle Regression
 
 def angle(V,resp,stat,it):
-    """Computes the expansion coefficients with a least angle regression"""
 
     nbrPoly = V.shape[1]
     mean = np.mean(resp)
@@ -181,10 +175,9 @@ def angle(V,resp,stat,it):
     coef[0] = mean-np.dot(coef[1:],stat[0])
     return coef
 
-# %% Least Absolute Shrinkage Operator
+# %% Expansion Coefficients with Least Absolute Shrinkage
 
 def shrink(V,resp,stat,it):
-    """Computes the expansion coefficients with a least absolute shrinkage"""
 
     nbrPoly = V.shape[1]
     mean = np.mean(resp)

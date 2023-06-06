@@ -1,171 +1,251 @@
-from .math import halton,sobol,rseq
-from scipy import special
+from scipy import special,stats
 import numpy as np
 
-# %% Uniform Distribution
+# %% Base Proba Class
 
-class Uniform:
-    """Class of uniform law with lower and upper boundaries"""
+class Proba:
 
-    def __init__(self,a,b):
+    def sobol(self,nbrPts):
+        
+        point = stats.qmc.Sobol(1).random(nbrPts)
+        return self.invcdf(point.flatten())
 
-        self.arg = [a,b]
-        self.pdf = lambda x: np.array(x)**0/(b-a)
-        self.cdf = lambda x: (np.array(x)-a)/(b-a)
-        self.invcdf = lambda x: (b-a)*np.array(x)+a
-        self.random = lambda x: np.random.uniform(a,b,x)
+    def halton(self,nbrPts):
 
-        self.rseq = lambda x: self.invcdf(rseq(x))
-        self.sobol = lambda x: self.invcdf(sobol(x))
-        self.halton = lambda x: self.invcdf(halton(x))
+        point = stats.qmc.Halton(1).random(nbrPts)
+        return self.invcdf(point.flatten())
 
-    def coef(self,nbrCoef):
+# %% Uniform Law with Lower and Upper Boundaries
 
-        [a,b] = self.arg
-        n = np.arange(nbrCoef)
-        coef = np.zeros((2,nbrCoef))
-        coef[0].fill((b+a)/2)
-        coef[1] = ((b-a)*n/2)**2/(4*n**2-1)
-        return coef
+class Uniform(Proba):
 
-# %% Normal Distribution
+    def __init__(self,A,B):
 
-class Normal:
-    """Class of normal law with mean and standard deviation"""
+        self.A = A
+        self.B = B
 
-    def __init__(self,a,b):
+    # Uniform probability density function
 
-        self.arg = [a,b]
-        self.invcdf = lambda x: a+np.sqrt(2)*b*special.erfinv(2*np.array(x)-1)
-        self.cdf = lambda x: 0.5*(1+special.erf((np.array(x)-a)/(b*np.sqrt(2))))
-        self.pdf = lambda x: np.exp(-0.5*((np.array(x)-a)/b)**2)/(b*np.sqrt(2*np.pi))
-        self.random = lambda x: np.random.normal(a,b,x)
+    def pdf(self,x):
+        return np.array(x).fill(1)/(self.B-self.A)
+    
+    def cdf(self,x):
+        return (np.array(x)-self.A)/(self.B-self.A)
 
-        self.rseq = lambda x: self.invcdf(rseq(x))
-        self.sobol = lambda x: self.invcdf(sobol(x))
-        self.halton = lambda x: self.invcdf(halton(x))
+    def invcdf(self,x):
+        return (self.B-self.A)*np.array(x)+self.A
+    
+    def random(self,x):
+        return np.random.uniform(self.A,self.B,x)
 
     def coef(self,nbrCoef):
 
-        [a,b] = self.arg
-        n = np.arange(nbrCoef)
         coef = np.zeros((2,nbrCoef))
-        coef[0].fill(a)
-        coef[1] = b**2*n
+        N = np.square(np.arange(nbrCoef))
+
+        # Compute the three term recurrence relation coefficients
+        
+        coef[0].fill((self.B+self.A)/2)
+        coef[1] = N*np.square((self.B-self.A)/2)/(4*N-1)
         return coef
 
-# %% Exponential Distribution
+# %% Normal Law with Mean and Standard Deviation
 
-class Expo:
-    """Class of exponential law with inverse scale"""
+class Normal(Proba):
 
-    def __init__(self,a):
+    def __init__(self,A,B):
 
-        self.arg = a
-        self.cdf = lambda x: 1-np.exp(-a*np.array(x))
-        self.pdf = lambda x: a*np.exp(-a*np.array(x))
-        self.invcdf = lambda x: -np.log(1-np.array(x))/a
-        self.random = lambda x: np.random.exponential(a,x)
+        self.A = A
+        self.B = B
 
-        self.rseq = lambda x: self.invcdf(rseq(x))
-        self.sobol = lambda x: self.invcdf(sobol(x))
-        self.halton = lambda x: self.invcdf(halton(x))
+    # Normal probability density function
+
+    def pdf(self,x):
+        
+        E = np.exp(-np.square((np.array(x)-self.A)/self.B)/2)
+        return E/(self.B*np.sqrt(2*np.pi))
+    
+    def cdf(self,x):
+
+        E = (np.array(x)-self.A)/(np.sqrt(2)*self.B)
+        return (1+special.erf(E))/2
+
+    def invcdf(self,x):
+
+        E = special.erfinv(2*np.array(x)-1)
+        return self.A+np.sqrt(2)*self.B*E
+    
+    def random(self,x):
+        return np.random.normal(self.A,self.B,x)
 
     def coef(self,nbrCoef):
 
-        a = self.arg
-        n = np.arange(nbrCoef)
+        N = np.arange(nbrCoef)
         coef = np.zeros((2,nbrCoef))
-        coef[0] = a*(1+2*n)
-        coef[1] = (a*n)**2
+
+        # Compute the three term recurrence relation coefficients
+
+        coef[0].fill(self.A)
+        coef[1] = N*np.square(self.B)
         return coef
 
-# %% Gamma Distribution
+# %% Exponential Law with Inverse Scale
 
-class Gamma:
-    """Class of gamma law with shape and scale"""
+class Expo(Proba):
 
-    def __init__(self,a,b):
+    def __init__(self,A):
 
-        self.arg = [a,b]
-        self.cdf = lambda x: special.gammainc(a,np.array(x))
-        self.invcdf = lambda x: b*special.gammaincinv(a,np.array(x))
-        self.pdf = lambda x: x**(a-1)*np.exp(-np.array(x)/b)/(special.gamma(a)*b**a)
-        self.random = lambda x: np.random.gamma(a,b,x)
+        self.A = A
 
-        self.rseq = lambda x: self.invcdf(rseq(x))
-        self.sobol = lambda x: self.invcdf(sobol(x))
-        self.halton = lambda x: self.invcdf(halton(x))
+    # Exponential probability density function
+
+    def pdf(self,x):
+        return self.A*np.exp(-self.A*np.array(x))
+    
+    def cdf(self,x):
+        return 1-np.exp(-self.A*np.array(x))
+
+    def invcdf(self,x):
+        return -np.log(1-np.array(x))/self.A
+
+    def random(self,x):
+        return np.random.exponential(self.A,x)
 
     def coef(self,nbrCoef):
 
-        [a,b] = self.arg
-        n = np.arange(nbrCoef)
+        N = np.arange(nbrCoef)
         coef = np.zeros((2,nbrCoef))
-        coef[0] = (2*n+a)*b
-        coef[1] = (n+a-1)*n*b**2
+
+        # Compute the three term recurrence relation coefficients
+
+        coef[0] = self.A*(1+2*N)
+        coef[1] = np.square(self.A*N)
         return coef
 
-# %% Lognormal Distribution
+# %% Gamma Law with Shape and Scale
 
-class Lognorm:
-    """Class of lognormal law with mean and variance"""
+class Gamma(Proba):
 
-    def __init__(self,a,b):
+    def __init__(self,A,B):
 
-        self.arg = [a,b]
-        self.invcdf = lambda x: np.exp(a+np.sqrt(2)*b*special.erfinv(2*np.array(x)-1))
-        self.cdf = lambda x: 0.5*(1+special.erf((np.log(np.array(x))-a)/(b*np.sqrt(2))))
-        self.pdf = lambda x: np.exp(-0.5*((np.log(np.array(x))-a)/b)**2)/(np.array(x)*b*np.sqrt(2*np.pi))
-        self.random = lambda x: np.random.lognormal(a,b,x)
+        self.A = A
+        self.B = B
 
-        self.rseq = lambda x: self.invcdf(rseq(x))
-        self.sobol = lambda x: self.invcdf(sobol(x))
-        self.halton = lambda x: self.invcdf(halton(x))
+    # Gamma probability density function
+
+    def cdf(self,x):
+        return special.gammainc(self.A,np.array(x))
+
+    def invcdf(self,x):
+        return self.B*special.gammaincinv(self.A,np.array(x))
+
+    def pdf(self,x):
+
+        E = np.power(x,self.A-1)*np.exp(-np.array(x)/self.B)
+        return E/(special.gamma(self.A)*np.power(self.B,self.A))
+    
+    def random(self,x):
+        return np.random.gamma(self.A,self.B,x)
 
     def coef(self,nbrCoef):
 
-        [a,b] = self.arg
-        n = np.arange(nbrCoef)
+        N = np.arange(nbrCoef)
         coef = np.zeros((2,nbrCoef))
-        coef[0] = (np.exp((n+1)*b**2)+np.exp(n*b**2)-1)*np.exp(((2*n-1)*b**2)/2+a)
-        coef[1] = (np.exp(n*b**2)-1)*np.exp((3*n-2)*b**2+2*a)
+
+        # Compute the three term recurrence relation coefficients
+
+        coef[0] = (2*N+self.A)*self.B
+        coef[1] = (N+self.A-1)*N*np.square(self.B)
         return coef
 
-# %% Beta Distribution
+# %% Lognormal Law with Mean and Variance
 
-class Beta:
-    """Class of beta law with shape parameters"""
+class Lognorm(Proba):
 
-    def __init__(self,a,b):
+    def __init__(self,A,B):
 
-        self.arg = [a,b]
-        self.cdf = lambda x: special.betainc(a,b,np.array(x))
-        self.invcdf = lambda x: special.betaincinv(a,b,np.array(x))
-        self.pdf = lambda x: x**(a-1)*(1-np.array(x))**(b-1)/special.beta(a,b)
-        self.random = lambda x: np.random.beta(a,b,x)
+        self.A = A
+        self.B = B
 
-        self.rseq = lambda x: self.invcdf(rseq(x))
-        self.sobol = lambda x: self.invcdf(sobol(x))
-        self.halton = lambda x: self.invcdf(halton(x))
+    # Lognormal probability density function
+
+    def pdf(self,x):
+
+        E = np.exp(-np.square((np.log(np.array(x))-self.A)/self.B)/2)
+        return E/(np.array(x)*self.B*np.sqrt(2*np.pi))
+    
+    def cdf(self,x):
+
+        E = (np.log(np.array(x))-self.A)/(np.sqrt(2)*self.B)
+        return 0.5*(1+special.erf(E))
+    
+    def invcdf(self,x):
+
+        E = special.erfinv(2*np.array(x)-1)
+        return np.exp(self.A+np.sqrt(2)*self.B*E)
+    
+    def random(self,x):
+        return np.random.lognormal(self.A,self.B,x)
 
     def coef(self,nbrCoef):
 
-        [a,b] = self.arg
-        n = np.arange(nbrCoef)
+        B = np.square(self.B)
+        N = np.arange(nbrCoef)
         coef = np.zeros((2,nbrCoef))
 
-        nab = 2*n+a+b
-        B1 = a*b*1./((a+b+1)*(a+b)**2)
-        B2 = (n+a-1)*(n+b-1)*n*(n+a+b-2)/((nab-1)*(nab-3)*(nab-2)**2+2*((n==0)+(n==1)))
-        coef[0] = ((a-1)**2-(b-1)**2)*0.5/(nab*(nab-2)+(nab==0)+(nab==2))+0.5
-        coef[1] = np.where((n==0)+(n==1),B1,B2)
+        # Compute the three term recurrence relation coefficients
+
+        coef[0] = (np.exp(N*B+B)+np.exp(N*B)-1)*np.exp((2*N*B-B)/2+self.A)
+        coef[1] = (np.exp(N*B)-1)*np.exp((3*N-2)*B+2*self.A)
         return coef
 
-# %% Joint Distribution
+# %% Beta Law with Shape Parameters
+
+class Beta(Proba):
+
+    def __init__(self,A,B):
+
+        self.A = A
+        self.B = B
+
+    # Beta probability density function
+
+    def pdf(self,x):
+
+        E = np.power(x,self.A-1)*np.power(1-np.array(x),self.B-1)
+        return E/special.beta(self.A,self.B)
+    
+    def cdf(self,x):
+        return special.betainc(self.A,self.B,np.array(x))
+    
+    def invcdf(self,x):
+        return special.betaincinv(self.A,self.B,np.array(x))
+
+    def random(self,x):
+        return np.random.beta(self.A,self.B,x)
+
+    def coef(self,nbrCoef):
+
+        N = np.arange(nbrCoef)
+        AB = 2*N+self.A+self.B
+        coef = np.zeros((2,nbrCoef))
+
+        # Define some temporary variables for computing the TTR
+
+        B1 = self.A*self.B/((self.A+self.B+1)*np.power(self.A+self.B,2))
+        B2 = (AB-1)*(AB-3)*np.power(AB-2,2)+2*((N==0)+(N==1))
+        B3 = (N+self.A-1)*(N+self.B-1)*N*(N+self.A+self.B-2)
+
+        # Compute the three term recurrence relation coefficients
+
+        coef[0] = (np.power(self.A-1,2)-np.power(self.B-1,2))/2
+        coef[0] = coef[0]/(AB*(AB-2)+(AB==0)+(AB==2))+0.5
+        coef[1] = np.where((N==0)+(N==1),B1,B3/B2)
+        return coef
+
+# %% Joint Probability Density Function
 
 class Joint:
-    """Class of joint probability density function"""
 
     def __init__(self,dist): self.dist = np.copy(np.atleast_1d(dist))
     def __setitem__(self,i,dist): self.dist[i] = dist
@@ -182,26 +262,19 @@ class Joint:
     def random(self,nbrPts):
 
         dim = self.dist.shape[0]
-        point = np.transpose([self.dist[i].random(nbrPts) for i in range(dim)])
-        return point
-
-    def rseq(self,nbrPts):
-
-        dim = self.dist.shape[0]
-        point = rseq(nbrPts,dim)
-        point = np.transpose([self.dist[i].invcdf(point[:,i]) for i in range(dim)])
-        return point
+        point = [self.dist[i].random(nbrPts) for i in range(dim)]
+        return np.transpose(point)
 
     def sobol(self,nbrPts):
 
         dim = self.dist.shape[0]
-        point = sobol(nbrPts,dim)
-        point = np.transpose([self.dist[i].invcdf(point[:,i]) for i in range(dim)])
-        return point
+        point = stats.qmc.Sobol(dim).random(nbrPts)
+        point = [self.dist[i].invcdf(point[:,i]) for i in range(dim)]
+        return np.transpose(point)
 
     def halton(self,nbrPts):
 
         dim = self.dist.shape[0]
-        point = halton(nbrPts,dim)
-        point = np.transpose([self.dist[i].invcdf(point[:,i]) for i in range(dim)])
-        return point
+        point = stats.qmc.Halton(dim).random(nbrPts)
+        point = [self.dist[i].invcdf(point[:,i]) for i in range(dim)]
+        return np.transpose(point)

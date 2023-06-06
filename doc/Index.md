@@ -5,12 +5,12 @@
 Chaoslib provides basic classes of well-know one-dimensional probability distributions for which the three terms recurrence coefficients can be computed analytically:
 
 ```python
-    dist = Beta(a,b)                    # Beta distribution
-    dist = Gamma(a,b)                   # Gamma distribution
-    dist = Normal(a,b)                  # Normal distribution
-    dist = Uniform(a,b)                 # Uniform distribution
-    dist = Lognorm(a,b)                 # Lognormal distribution
-    dist = Expo(a)                      # Exponential distribution
+dist = Beta(a,b)            # Beta distribution
+dist = Gamma(a,b)           # Gamma distribution
+dist = Normal(a,b)          # Normal distribution
+dist = Uniform(a,b)         # Uniform distribution
+dist = Lognorm(a,b)         # Lognormal distribution
+dist = Expo(a)              # Exponential distribution
 ```
 
 | Input             | Type              | Description                                   |
@@ -23,10 +23,10 @@ Chaoslib provides basic classes of well-know one-dimensional probability distrib
 Each of these classes contains different built-in methods:
 
 ```python
-    dist.pdf(x)                          # Probability density function
-    dist.cdf(x)                          # Cumulative distribution function
-    dist.invcdf(x)                       # Inverse cumulative distribution function
-    dist.coef(n)                         # Computes the n first recurrence coefficients
+dist.pdf(x)             # Probability density function
+dist.cdf(x)             # Cumulative distribution function
+dist.invcdf(x)          # Inverse cumulative distribution function
+dist.coef(n)            # Computes the n first recurrence coefficients
 ```
 
 | Input             | Type                      | Description                               |
@@ -38,10 +38,9 @@ Each of these classes contains different built-in methods:
 Random samples or different low-discrepancy sequences can be generated from any of these distributions:
 
 ```python
-    dist.random(n)                      # Generates random realisations from the distribution
-    dist.halton(n)                      # Generates a Halton sequence from the distribution
-    dist.sobol(n)                       # Generates a Sobol sequence from the distribution
-    dist.rseq(n)                        # Generates a R-sequence points from the distribution
+dist.random(n)          # Generates random realisations from the distribution
+dist.halton(n)          # Generates a Halton sequence from the distribution
+dist.sobol(n)           # Generates a Sobol sequence from the distribution
 ```
 
 | Input             | Type                      | Description                               |
@@ -53,10 +52,10 @@ Random samples or different low-discrepancy sequences can be generated from any 
 Finally, independent one-dimensional distributions can be joint together, for instance:
 
 ```python
-    dist = Joint([Normal(a,b),Beta(a,b)])          # Joint probability density function
+dist = Joint([Normal(a,b),Beta(a,b)])       # Joint probability density function
 ```
 
-| Input             | Type                  | Description                               |
+| Input             | Type              | Description                               |
 |-------------------|-------------------|-----------------------------------------------|
 | *a*               | *float*           | *first parameter of the distribution*         |
 | *b*               | *float*           | *second parameter of the distribution*        |
@@ -66,9 +65,9 @@ Finally, independent one-dimensional distributions can be joint together, for in
 And allow the computation to the joint probability distribution function and the generation of a random sample or a low-discrepancy sequences. The parameter `d` is the dimension of the density.
 
 ```python
-    dist.pdf(x)                        # Joint probability density function
-    dist.sampler(n)                    # Generates n samples from the distribution
-    dist[i] = Uniform(a,b)             # Updates the i-th distribution
+dist.pdf(x)                     # Joint probability density function
+dist.sampler(n)                 # Generates n samples from the distribution
+dist[i] = Uniform(a,b)          # Updates the i-th distribution
 ```
 
 | Input             | Type                      | Description                               |
@@ -86,7 +85,7 @@ And allow the computation to the joint probability distribution function and the
 A polynomial basis can be constructed by with an exponent table and a coefficient matrix. The parameter `d` is the dimension, `m` the number of monomials and `p` is the number of polynomials.
 
 ```python
-    poly = Polynomial(expo,coef,csr=0)              # Class of olynomial basis
+poly = Polynomial(expo,coef,csr=0)      # Class of olynomial basis
 ```
 
 | Input             | Type                  | Description                       |
@@ -100,9 +99,9 @@ A polynomial basis can be constructed by with an exponent table and a coefficien
 The class of polynomial basis contains some in-built methods such as the evaluation of its polynomials at an array of `n` point:
 
 ```python
-    V = poly.eval(point)                                # Computes the Vandermonde matrix
-    poly.clean(index)                                   # Selects the relevant polynomials
-    poly.trunc(order)                                   # Truncates the polynomial basis
+V = poly.eval(point)            # Computes the Vandermonde matrix
+poly.clean(index)               # Selects the relevant polynomials
+poly.trunc(order)               # Truncates the polynomial basis
 ```
 
 | Input             | Type                  | Description                                   |
@@ -116,7 +115,7 @@ The class of polynomial basis contains some in-built methods such as the evaluat
 An orthonormal polynomial basis with respect to a sample can be generated by Gram Schmidt process. The parameter `weight` must be provided if the points are quadrature nodes, otherwise a Monte Carlo integration is assumed.
 
 ```python
-    poly = gschmidt(order,point,weight=0,trunc=1)               # Gram-Schmidt process
+poly = gschmidt(order,point,weight=0,trunc=1)       # Gram-Schmidt process
 ```
 
 | Input             | Type                  | Description                                   |
@@ -131,13 +130,13 @@ An orthonormal polynomial basis with respect to a sample can be generated by Gra
 Similarly, orthogonal polynomials can be constructed using a three terms recurrence coefficients relation related to a well-knows distribution or joint distribution.
 
 ```python
-    poly = polyrecur(order,dist,trunc=1)                    # Three terms recurrence relation
+poly = polyrecur(order,dist,trunc=1)        # Three terms recurrence relation
 ```
 
 | Input             | Type                          | Description                                           |
 |-------------------|-------------------------------|-------------------------------------------------------|
 | *order*           | *int*                         | *maximum order of the polynomials*                    |
-| *dist*            | *oject or (-) array*          | *joint distribution or list of distributions*         |
+| *dist*            | *object or array*             | *joint distribution or list of distributions*         |
 | *trunc*           | *float*                       | *hyperbolic truncation norm*                          |
 
 <br />
@@ -149,7 +148,7 @@ Similarly, orthogonal polynomials can be constructed using a three terms recurre
 A quasi-Monte Carlo quadrature rule can be generated with a low-discrepancy sequence. The parameter `pdf` must have the same behaviour as the `pdf` method of a distribution class.
 
 ```python
-    point,weight = qmcquad(nbrPts,dom,pdf=0,seq='halton')       # Quasi-Monte Carlo quadrature
+point,weight = qmcquad(nbrPts,dom,pdf=0,seq='halton')       # Quasi-Monte Carlo quadrature
 ```
 
 | Input             | Type                  | Description                                   |
@@ -164,23 +163,23 @@ A quasi-Monte Carlo quadrature rule can be generated with a low-discrepancy sequ
 A tensor product quadrature rule with respect to the probability density function of a well-known distribution or joint disctrubution can be generated by
 
 ```python
-    point,weight = tensquad(order,dist)           # Tensor product quadrature
+point,weight = tensquad(order,dist)         # Tensor product quadrature
 ```
 
 | Input             | Type                          | Description                                           |
 |-------------------|-------------------------------|-------------------------------------------------------|
 | *order*           | *int*                         | *order of the quadrature rule*                        |
-| *dist*            | *oject or (-) array*          | *joint distribution or list of distributions*         |
+| *dist*            | *object or array*          | *joint distribution or list of distributions*         |
 
 <br />
 
 Different sparse quadrature rules for a polynomial basis can be generated from a Monte Carlo integration set. The original number of points must be larger than the number of polynomials in the basis.
 
 ```python
-    index,weight = simquad(point,poly)                 # Revised simplex algorithm
-    index,weight = fekquad(point,poly)                 # Approximate Fekete points
-    index,weight = nulquad(point,poly,weight)          # Positive quadrature with null space
-    index,weight = newquad(point,poly,weight)          # Positive quadrature with Newton
+index,weight = simquad(point,poly)              # Revised simplex algorithm
+index,weight = fekquad(point,poly)              # Approximate Fekete points
+index,weight = nulquad(point,poly,weight)       # Positive quadrature with null space
+index,weight = newquad(point,poly,weight)       # Positive quadrature with Newton
 ```
 
 | Input             | Type                  | Description                           |
@@ -198,8 +197,8 @@ Different sparse quadrature rules for a polynomial basis can be generated from a
 The polynomial chaos coefficients can be computed by spectral projection of least squares regression. The parameter `n` is the number of points and `d` the dimension. The parameter `weight` must be provided if the points are quadrature nodes, otherwise a Monte Carlo integration is assumed.
 
 ```python
-    coef = spectral(resp,poly,point,weight=0)              # Spectral projection
-    coef = colloc(resp,poly,point,weight=0)                # Point collocation
+coef = spectral(resp,poly,point,weight=0)           # Spectral projection
+coef = colloc(resp,poly,point,weight=0)             # Point collocation
 ```
 
 | Input             | Type                  | Description                                   |
@@ -214,8 +213,8 @@ The polynomial chaos coefficients can be computed by spectral projection of leas
 The least angle regression algorithm selects the relevant polynomials in addition to compute their coefficients. The parameter `index` is the indices of the selected polynomials, if `it` is not provided, all the available polynomials are selected.
 
 ```python
-    coef,index = lars(resp,poly,point,weight=0,it=np.inf)           # Least angle regression
-    coef,index = lasso(resp,poly,point,weight=0,it=np.inf)          # Least shrinkage operator
+coef,index = lars(resp,poly,point,weight=0,it=np.inf)       # Least angle regression
+coef,index = lasso(resp,poly,point,weight=0,it=np.inf)      # Least shrinkage operator
 ```
 
 | Input             | Type                  | Description                                   |
@@ -235,10 +234,10 @@ The least angle regression algorithm selects the relevant polynomials in additio
 The polynomial chaos model can be constructed by invoking the constructor of the expansion class. The parameter `p` is the number of polynomials in the basis. The class provides different built-in methods:
 
 ```python
-    model = Expansion(coef,poly)                # Class containing the surrogate model
-    resp = model.eval(point)                    # Evaluates the surrogate model
-    mean = model.mean                           # Returns the mean of the output
-    var = model.var                             # Return the variance of the output
+model = Expansion(coef,poly)            # Class containing the surrogate model
+resp = model.eval(point)                # Evaluates the surrogate model
+mean = model.mean                       # Returns the mean of the output
+var = model.var                         # Return the variance of the output
 ```
 
 | Input             | Type                  | Description                                   |
@@ -252,8 +251,8 @@ The polynomial chaos model can be constructed by invoking the constructor of the
 In addition, a simple polynomial mapping between two one-dimensional random variables can be computed by
 
 ```python
-    mapping = transfo(invcdf,order,dist)            # Transforms a distribution
-    y = mapping(x)                                  # Mapping from the x space to the y space
+mapping = transfo(invcdf,order,dist)        # Transforms a distribution
+y = mapping(x)                              # Mapping from the x space to the y space
 ```
 
 | Input             | Type                  | Description                                       |
@@ -271,7 +270,7 @@ In addition, a simple polynomial mapping between two one-dimensional random vari
 A class of principal components analysis whitening can be created for a linearly correlated sample. The parameter `n` is the number of points and `d` is the dimension.
 
 ```python
-    mapping = Pca(sample)                   # Class of PCA whitening
+mapping = Pca(sample)           # Class of PCA whitening
 ```
 
 | Input             | Type                  | Description                           |
@@ -283,8 +282,8 @@ A class of principal components analysis whitening can be created for a linearly
 The class will act as a mapping function between the whitened and the original random vectors.
 
 ```python
-    whitened = mapping.white(sample)            # Whitens a sample of points
-    sample = mapping.corr(whitened)             # Recovers the original sample
+whitened = mapping.white(sample)            # Whitens a sample of points
+sample = mapping.corr(whitened)             # Recovers the original sample
 ```
 
 | Input             | Type                  | Description                                               |
@@ -297,7 +296,7 @@ The class will act as a mapping function between the whitened and the original r
 The Sobol sensitivity indices of a model can be directly obtained from the polynomial chaos coefficients by
 
 ```python
-    sobol = anova(coef,poly)           # Computes the Sobol sensitivity indices
+sobol = anova(coef,poly)            # Computes the Sobol sensitivity indices
 ```
 
 | Input             | Type                  | Description                               |
@@ -310,7 +309,7 @@ The Sobol sensitivity indices of a model can be directly obtained from the polyn
 For dependent random variables, the analysis of covariance indices can be obtained from the polynomial chaos model with
 
 ```python
-    index,ancova = ancova(model,point,weight=0)         # Computes the ancova indices
+index,ancova = ancova(model,point,weight=0)     # Computes the ancova indices
 ```
 
 | Input             | Type                  | Description                           |
@@ -324,7 +323,7 @@ For dependent random variables, the analysis of covariance indices can be obtain
 Finally, any objects generated by Chaoslib can be saved in a pickle file:
 
 ```python
-    save(item,name)                # Saves an object in a file.pickle
+save(item,name)         # Saves an object in a file.pickle
 ```
 
 | Input             | Type                  | Description                               |

@@ -1,13 +1,11 @@
 from scipy import sparse,linalg
-from .math import indextens
 from .tools import printer
 from .proba import Joint
 import numpy as np
 
-# %% Polynomial Basis
+# %% Class of Orthogonal Polynomials Basis
 
 class Polynomial:
-    """Class of orthogonal polynomials basis"""
 
     def __init__(self,expo,coef,csr=0):
 
@@ -57,10 +55,9 @@ class Polynomial:
         self.expo = self.expo[:,idx]
         self.coef = self.coef[:,idx]
 
-# %% Gram-Schmidt
+# %% Orthonormal Polynomial Basis with Gram-Schmidt
 
 def gschmidt(order,point,weight=0,trunc=1):
-    """Computes the orthonormal polynomial basis using Gram-Schmidt"""
 
     printer(0,'Computing polynomials ...')
 
@@ -90,10 +87,9 @@ def gschmidt(order,point,weight=0,trunc=1):
     printer(1,'Computing polynomials 100 %')
     return poly
 
-# %% Recurrence Coefficients
+# %% Orthogonal Polynomials with Recurrence Coefficients
 
 def polyrecur(order,dist,trunc=1):
-    """Computes the orthogonal polynomial basis using recurrence coefficients"""
 
     printer(0,'Computing polynomials ...')
     if not isinstance(dist,Joint): dist = Joint(dist)
@@ -128,10 +124,9 @@ def polyrecur(order,dist,trunc=1):
     printer(1,'Computing polynomials 100 %')
     return poly
 
-# %% Tensor Product
+# %% Tensor product of Univariate Polynomial Basis
 
 def tensdot(polyList,order,trunc):
-    """Computes the tensor product of univariate polynomial basis"""
 
     def reshape(poly,expo):
 
@@ -151,3 +146,26 @@ def tensdot(polyList,order,trunc):
 
     poly = Polynomial(expo,coef,1)
     return poly
+
+# %% Multi-Index Matrix of Polynomial Tensor Product
+
+def indextens(order,dim,trunc):
+
+    nbrPoly = order+1
+    base = np.arange(nbrPoly)[:,None]
+    index = base.copy()
+
+    # Creates the matrix of index
+
+    for i in range(1,dim):
+
+        v1 = np.tile(index,(nbrPoly,1))
+        v2 = np.repeat(base,v1.shape[0]/nbrPoly,axis=0)
+
+        index = np.concatenate((v2,v1),axis=1)
+        norm = np.sum(index**trunc,axis=1)**(1/trunc)
+        index = index[norm.round(6)<=order]
+        index = index[np.argsort(np.sum(index,axis=-1))]
+
+    index = np.transpose(index)
+    return index

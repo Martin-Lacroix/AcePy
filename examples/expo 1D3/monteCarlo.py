@@ -15,9 +15,6 @@ np.save('var.npy',var)
 
 # %% Figures
 
-plt.rcParams['font.size'] = 18
-plt.rcParams['legend.fontsize'] = 18
-
 plt.figure(1)
 plt.plot(mean,label='Monte Carlo')
 plt.ylabel('Mean')

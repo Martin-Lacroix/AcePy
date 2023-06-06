@@ -1,20 +1,17 @@
-from .math import halton,sobol,rseq
-from scipy import optimize,linalg
+from scipy import optimize,stats,linalg
 from .tools import printer,timer
 from .proba import Joint
 import numpy as np
 
-# %% Quasi-Monte Carlo
+# %% Quadrature for Uniform Quasi-Monte Carlo Inregration
 
 def qmcquad(nbrPts,dom,pdf=0,seq='halton'):
-    """Quadrature rule for uniform quasi-Monte Carlo inregration"""
 
     dom = np.atleast_2d(dom)
     dim = dom.shape[0]
     
-    if (seq=='halton'): point = halton(nbrPts,dim)
-    if (seq=='sobol'): point = sobol(nbrPts,dim)
-    if (seq=='sobol'): point = rseq(nbrPts,dim)
+    if (seq=='halton'): point = stats.qmc.Halton(dim).random(nbrPts)
+    if (seq=='sobol'): point = stats.qmc.Sobol(dim).random(nbrPts)
     point = np.reshape(point,(-1,dim))
 
     # Expands the sequence into the provided domain
@@ -33,10 +30,9 @@ def qmcquad(nbrPts,dom,pdf=0,seq='halton'):
     if callable(pdf): weight = np.multiply(weight,pdf(point))
     return point,weight
 
-# %% Tensor Product
+# %% Tensor Product Quadrature with Recurrence Coefficients
 
 def tensquad(order,dist):
-    """Computes the tensor product quadrature rule with recurrence coefficients"""
 
     if not isinstance(dist,Joint): dist = Joint(dist)
 
@@ -74,10 +70,9 @@ def tensquad(order,dist):
     point = np.squeeze(point)
     return point,weight
 
-# %% Fekete Points
+# %% Approximate Fekete Points and Weights
 
 def fekquad(point,poly):
-    """Selects the approximate Fekete points and computes their weights"""
 
     printer(0,'Computing quadrature ...')
     nbrPoly = poly[:].shape[0]
@@ -100,10 +95,9 @@ def fekquad(point,poly):
     printer(1,'Computing quadrature 100 %')
     return index,weight
 
-# %% Positive Quadrature
+# %% Positive Quadrature by Node Removal with QR downgrade
 
 def nulquad(point,poly,weight=0):
-    """Computes a positive quadrature rule by node removal with QR downgrade"""
     
     printer(0,'Computing quadrature ...')
 
@@ -138,10 +132,9 @@ def nulquad(point,poly,weight=0):
     printer(1,'Computing quadrature 100 %')
     return index,weight
 
-# %% Positive Quadrature
+# %% Positive Quadrature by Node Removal with Newton-Raphson
 
 def newquad(point,poly,weight=0):
-    """Computes a positive quadrature rule by node removal with Newton-Raphson"""
     
     def null(Vt,Jinv,z):
         
@@ -192,10 +185,9 @@ def newquad(point,poly,weight=0):
     printer(1,'Computing quadrature 100 %')
     return index,weight
 
-# %% Revised Simplex
+# %% Positive Quadrature with Revised Simplex
 
 def simquad(point,poly):
-    """Computes a positive quadrature rule using the revised simplex"""
 
     printer(0,'Computing quadrature ...')
     
