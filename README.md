@@ -1,6 +1,6 @@
 ## Introduction
 
-Code developed for obtaining the **Master's degree in Engineering Physics**. The code is an arbitrary polynomial chaos toolkit for high dimensional stochastic problems with correlated input variables. The examples and doc folders contain some test-cases as well as a compilable documentation. [Thesis report here](https://hdl.handle.net/2268/293566).
+Code developed for obtaining the **Master's degree in Engineering Physics**. The code is an arbitrary polynomial chaos toolkit for high dimensional stochastic problems with correlated input variables. The examples and doc folders contain some test-cases as well as a documentation. [Thesis report here](https://hdl.handle.net/2268/293566).
 
 ## Installation
 
