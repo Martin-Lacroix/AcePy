@@ -33,7 +33,7 @@ for i in range(mean.shape[0]):
     plt.plot(mean[i],'C0')
     plt.plot(meanMc[i],'C1--')
 
-plt.legend(['Chaoslib','Monte Carlo'])
+plt.legend(['AcePy','Monte Carlo'])
 plt.ylabel('Mean')
 plt.show()
 
@@ -42,6 +42,6 @@ for i in range(var.shape[0]):
     plt.plot(var[i],'C0')
     plt.plot(varMc[i],'C1--')
 
-plt.legend(['Chaoslib','Monte Carlo'])
+plt.legend(['AcePy','Monte Carlo'])
 plt.ylabel('Variance')
 plt.show()
