@@ -1,5 +1,5 @@
 import numpy as np
-import chaoslib as cl
+import acepy as ap
 from fun import response
 from matplotlib import pyplot as plt
 
@@ -7,18 +7,18 @@ from matplotlib import pyplot as plt
 
 ordPoly = 7
 ordQuad = 3*ordPoly
-dist = cl.Joint([cl.Normal(-18,2),cl.Gamma(2,0.001),cl.Uniform(1.5,3),cl.Normal(21,1)])
+dist = ap.Joint([ap.Normal(-18,2),ap.Gamma(2,0.001),ap.Uniform(1.5,3),ap.Normal(21,1)])
 
 # %% Polynomial Chaos
 
-point,weight = cl.tensquad(ordQuad,dist)
-poly = cl.polyrecur(ordPoly,dist)
+point,weight = ap.tensquad(ordQuad,dist)
+poly = ap.polyrecur(ordPoly,dist)
 resp = response(point)
 
-coef = cl.spectral(resp,poly,point,weight)
-model = cl.Expansion(coef,poly)
+coef = ap.spectral(resp,poly,point,weight)
+model = ap.Expansion(coef,poly)
 
-cl.save(model,'model')
+ap.save(model,'model')
 mean,var = [model.mean,model.var]
 
 # %% Figures

@@ -1,5 +1,5 @@
 import numpy as np
-import chaoslib as cl
+import acepy as ap
 from fun import sampler,response
 from matplotlib import pyplot as plt
 
@@ -11,17 +11,17 @@ nbrPts = int(1e4)
 # %% Polynomial Chaos
 
 point = sampler(nbrPts)
-poly = cl.gschmidt(order,point)
-index,weight = cl.newquad(point,poly)
+poly = ap.gschmidt(order,point)
+index,weight = ap.newquad(point,poly)
 
 poly.trunc(3)
 point = point[index]
 resp = response(point)
 
-coef = cl.spectral(resp,poly,point,weight)
-model = cl.Expansion(coef,poly)
+coef = ap.spectral(resp,poly,point,weight)
+model = ap.Expansion(coef,poly)
 
-cl.save(model,'model')
+ap.save(model,'model')
 mean,var = [model.mean,model.var]
 
 # %% Figures

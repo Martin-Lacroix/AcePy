@@ -1,5 +1,5 @@
 import numpy as np
-import chaoslib as cl
+import acepy as ap
 from fun import sampler
 
 # %% Functions
@@ -25,7 +25,7 @@ def cholesky(B):
 order = 2
 nbrPts = int(50)
 point = sampler(nbrPts)
-poly = cl.gschmidt(order,point)
+poly = ap.gschmidt(order,point)
 V = poly.eval(point)
 
 B = np.dot(V.T,V)

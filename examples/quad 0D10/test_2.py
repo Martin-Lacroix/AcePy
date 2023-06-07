@@ -1,5 +1,5 @@
 import numpy as np
-import chaoslib as cl
+import acepy as ap
 from fun import sampler,response
 
 # %% Initialisation
@@ -10,17 +10,17 @@ nbrPts = int(1e4)
 # %% Polynomial Chaos
 
 point = sampler(nbrPts)
-poly = cl.gschmidt(order,point)
+poly = ap.gschmidt(order,point)
 resp = response(point)
 
-coef,index = cl.lars(resp,poly,point,it=80)
+coef,index = ap.lars(resp,poly,point,it=80)
 coef = coef[index]
 poly.clean(index)
 
-coef = cl.colloc(resp,poly,point)
-model = cl.Expansion(coef,poly)
+coef = ap.colloc(resp,poly,point)
+model = ap.Expansion(coef,poly)
 
-cl.save(model,'model')
+ap.save(model,'model')
 mean,var = [model.mean,model.var]
 
 # %% Figures

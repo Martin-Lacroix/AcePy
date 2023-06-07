@@ -1,5 +1,5 @@
 import numpy as np
-import chaoslib as cl
+import acepy as ap
 
 # %% Simple Problem
 
@@ -9,8 +9,8 @@ stat = [np.mean(V,axis=0),np.std(V,axis=0,ddof=1)]
 resp = np.array([6,8,6,7,5,4])
 
 V = (V-stat[0])/stat[1]
-lars1 = cl.angle(V,resp,stat,it)
-lasso1 = cl.shrink(V,resp,stat,it)
+lars1 = ap.angle(V,resp,stat,it)
+lasso1 = ap.shrink(V,resp,stat,it)
 
 # %% Longley Problem
 
@@ -36,8 +36,8 @@ resp = [60323,61122,60171,61187,63221,63639,64989,63761,66019,67857,68169,66513,
 stat = [np.mean(V,axis=0),np.std(V,axis=0,ddof=1)]
 
 V = (V-stat[0])/stat[1]
-lars2 = cl.angle(V,resp,stat,it)
-lasso2 = cl.shrink(V,resp,stat,it)
+lars2 = ap.angle(V,resp,stat,it)
+lasso2 = ap.shrink(V,resp,stat,it)
 
 # %% Solutions
 

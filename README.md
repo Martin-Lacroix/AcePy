@@ -1,18 +1,17 @@
 ## Introduction
 
-Code developped for obtaining the **Master's degree in Engineering Physics**. The code is a polynomial chaos library for high dimensionnal stochastic problems with correlated input variables. The examples and doc folders contain some test-cases as well as a compilable documentation. [Thesis report here](https://hdl.handle.net/2268/293566).
+Code developed for obtaining the **Master's degree in Engineering Physics**. The code is an arbitrary polynomial chaos toolkit for high dimensional stochastic problems with correlated input variables. The examples and doc folders contain some test-cases as well as a compilable documentation. [Thesis report here](https://hdl.handle.net/2268/293566).
 
 ## Installation
 
-First, make sure to work with Python 3 and the lastest version of Numpy and Scipy. This library also requires the package sobol_seq to generate the Sobol low-discrepancy sequence. Then, place the chaoslib folder in the site-packages folder of Python to use the library.
+First, make sure to work with Python 3 and install the last version of Scipy. Some functionalities may not be available while using older packages. Then, add the main repository folder to your Python path environment variables. Another possibility is to add the path to Acepy in your Python script
 ```css
-C:\ProgramData\WPy64-3770\python-3.7.7.amd64\Lib\site-packages
+export PYTHONPATH=path-to-acepy
 ```
-Another possibility is to temporary add the package to your environment variables, this can be done by adding the chaoslib folder to the system path at the begining of your scripts using the following code.
 ```css
 from sys import path
-path.append('path-to-chaoslib')
-import chaoslib
+path.append('path-to-acepy')
+import acepy
 ```
 
 ## Author

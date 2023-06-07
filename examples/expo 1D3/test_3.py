@@ -1,5 +1,5 @@
 import numpy as np
-import chaoslib as cl
+import acepy as ap
 from fun import response
 from matplotlib import pyplot as plt
 
@@ -9,20 +9,20 @@ ordPoly = 5
 ordQuad = 2*ordPoly
 
 dist = []
-dist.append(cl.Normal(0.5,0.15))
-dist.append(cl.Uniform(0.5,2.5))
-dist.append(cl.Uniform(0.03,0.07))
+dist.append(ap.Normal(0.5,0.15))
+dist.append(ap.Uniform(0.5,2.5))
+dist.append(ap.Uniform(0.03,0.07))
 
 # %% Polynomial Chaos
 
-point,weight = cl.tensquad(ordQuad,dist)
-poly = cl.polyrecur(ordPoly,dist)
+point,weight = ap.tensquad(ordQuad,dist)
+poly = ap.polyrecur(ordPoly,dist)
 
 resp = response(point)
-coef = cl.spectral(resp,poly,point,weight)
-model = cl.Expansion(coef,poly)
+coef = ap.spectral(resp,poly,point,weight)
+model = ap.Expansion(coef,poly)
 
-cl.save(model,'model')
+ap.save(model,'model')
 mean,var = [model.mean,model.var]
 
 # %% Figures
