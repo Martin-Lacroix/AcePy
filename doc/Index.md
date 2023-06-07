@@ -2,15 +2,12 @@
 
 <br />
 
-AcePy provides basic classes of well-know one-dimensional probability distributions for which the three terms recurrence coefficients can be computed analytically:
+AcePy provides basic classes of well-know one-dimensional probability distributions for which the three terms recurrence coefficients can be computed analytically. For instance:
 
 ```python
 dist = Beta(a,b)            # Beta distribution
-dist = Gamma(a,b)           # Gamma distribution
 dist = Normal(a,b)          # Normal distribution
 dist = Uniform(a,b)         # Uniform distribution
-dist = Lognorm(a,b)         # Lognormal distribution
-dist = Expo(a)              # Exponential distribution
 ```
 
 | Input             | Type              | Description                                   |
@@ -20,7 +17,7 @@ dist = Expo(a)              # Exponential distribution
 
 <br />
 
-Each of these classes contains different built-in methods:
+Each of these classes contains different built-in methods.
 
 ```python
 dist.pdf(x)             # Probability density function
