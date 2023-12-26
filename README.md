@@ -5,10 +5,10 @@ Code developed for obtaining the **Master's degree in Engineering Physics**. The
 ## Installation
 
 First, make sure to work with Python 3 and install the last version of Scipy. Some functionalities may not be available while using older packages. Then, add the main repository folder to your Python path environment variables. Another possibility is to add the path to AcePy in your Python script
-```css
+```sh
 export PYTHONPATH=path-to-acepy
 ```
-```css
+```python
 from sys import path
 path.append('path-to-acepy')
 import acepy
